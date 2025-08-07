@@ -11,14 +11,18 @@ import jakarta.persistence.Table;
 public class AccountModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private double balance;
+    private int balance;
 
-    public AccountModel(String name, double balance) {
+    public AccountModel(String name, int balance) {
         this.name = name;
         this.balance = balance;
+    }
+
+    public AccountModel() {
+
     }
 
     public String getName() {
@@ -29,11 +33,11 @@ public class AccountModel {
         this.name = name;
     }
 
-    public double getBalance() {
+    public int getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(int balance) {
         this.balance = balance;
     }
 }
