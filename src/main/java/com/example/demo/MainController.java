@@ -1,10 +1,9 @@
 package com.example.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,9 +13,12 @@ public class MainController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private AccountService accountService;
+
     @GetMapping("/")
     public String index() {
-        return "Hello, World!";
+        return "Hello, World2!";
     }
 
     @PostMapping("/accounts")
@@ -25,8 +27,16 @@ public class MainController {
         return accountRepository.save(newAccount);
     }
 
-    @PutMapping("/accounts/{id}/deposit")
-    public void deposit(@PathVariable Long id, @RequestParam int amount) {
-        accountRepository.updateBalance(id, amount);
+    @PostMapping("/accounts/transfer")
+    public ResponseEntity<String> transfer(
+            @RequestParam Long sourceAccountId,
+            @RequestParam Long destinationAccountId,
+            @RequestParam int amount) {
+        try {
+            accountService.transfer(sourceAccountId, destinationAccountId, amount);
+            return ResponseEntity.ok("Transfer successful");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
